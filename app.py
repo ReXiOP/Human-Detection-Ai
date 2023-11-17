@@ -77,5 +77,7 @@ def upload():
 @app.route('/download/<filename>')
 def download(filename):
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], filename), as_attachment=True)
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
