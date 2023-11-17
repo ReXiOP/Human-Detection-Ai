@@ -20,7 +20,7 @@ python3 detect.py --weights sajid.pt  --source _test --person
 
 ## To Run as server:
 ```bash
-python web_server.py
+python app.py
 ```
 **Output (Crowd Human Model)**
 
