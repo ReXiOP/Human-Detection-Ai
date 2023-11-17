@@ -12,8 +12,8 @@ python3 detect.py --weights crowdhuman_yolov5m.pt --source _test/ --heads
 
 ### To change between blurring and pixelation, go to the line 190 - 203 on detect.py
 
-<br/>
-## To blur the human:
+
+### To blur the human:
 ```bash
 python3 detect.py --weights sajid.pt  --source _test --person
 ```
