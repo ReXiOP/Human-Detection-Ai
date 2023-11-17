@@ -1,0 +1,8 @@
+1st open PowerShell as administrator
+run " set-executionpolicy unrestricted "
+then" conda init powershell "
+then run " cd (drag and drop ai folder)"
+run " conda create --name ai "
+run " conda activate myenv "  
+run " pip install -r requirements.txt "
+"python3 detect.py --weights sajid.pt --source file_name  --person"

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Pixelation</title>
+</head>
+<body>
+    <h1>Image Pixelation</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".png, .jpg, .jpeg" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    {% if original_image %}
+        <h2>Original Image: {{ original_image }}</h2>
+        <img src="{{ url_for('download', filename=original_image) }}" alt="Original Image">
+
+        <h2>Pixelated Image:</h2>
+        <img src="{{ url_for('download', filename=pixelated_image) }}" alt="Pixelated Image">
+        <a href="{{ url_for('download', filename=pixelated_image) }}" download>Download Pixelated Image</a>
+    {% endif %}
+
+    {% if error %}
+        <p>Error: {{ error }}</p>
+    {% endif %}
+</body>
+</html>
