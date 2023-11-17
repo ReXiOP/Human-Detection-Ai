@@ -5,7 +5,6 @@ import cv2
 import numpy as np
 
 app = Flask(__name__)
-@app.route('/')
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -46,7 +45,7 @@ def anonymize_face_pixelate(image, blocks=20):
 
     return pixelated_image
 
-
+@app.route('/')
 def index():
     return render_template('index.html')
 
