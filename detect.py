@@ -18,7 +18,7 @@ from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized
 
 
-def anonymize_face_pixelate(image, blocks=20):
+def anonymize_face_pixelate(image, blocks=50):
     # divide the input image into NxN blocks
     (h, w) = image.shape[:2]
     xSteps = np.linspace(0, w, blocks + 1, dtype="int")
@@ -44,27 +44,43 @@ def anonymize_face_pixelate(image, blocks=20):
 
 
 def plot_one_blurred_head(x, img):
+    img_face_blurred = img.copy()  # Make a copy of the input image
+
     try:
         topLeft = (int(x[0]), int(x[1]))
         bottomRight = (int(x[2]), int(x[3]))
-        # cv2.rectangle(img, topLeft, bottomRight,  (230, 0,0), thickness=1, lineType=cv2.LINE_AA)
+
         x, y = topLeft[0], topLeft[1]
         w, h = bottomRight[0] - topLeft[0], bottomRight[1] - topLeft[1]
 
         p1 = (x, y)
         p2 = (p1[0] + w, p1[1] + h)
 
-        circle_center = ((p1[0] + p2[0]) // 2, (p1[1] + p2[1]) // 2)
-        circle_radius = int(math.sqrt(w * w + h * h) // 2)
+        rect = (p1[0], p1[1], w, h)  # Rectangle coordinates (x, y, width, height)
+
+        # Increase the rectangle size (radius) by a factor
+        radius_factor = 2.5
+        rect_expanded = (
+            int(rect[0] - radius_factor * rect[2] / 2),
+            int(rect[1] - radius_factor * rect[3] / 2),
+            int(rect[2] + radius_factor * rect[2]),
+            int(rect[3] + radius_factor * rect[3])
+        )
+
         mask_img = np.zeros(img.shape, dtype='uint8')
 
-        cv2.circle(mask_img, circle_center, circle_radius, (255, 255, 255), -1)
+        cv2.rectangle(mask_img, (rect_expanded[0], rect_expanded[1]),
+                      (rect_expanded[0] + rect_expanded[2], rect_expanded[1] + rect_expanded[3]),
+                      (255, 255, 255), -1)
 
-        img_all_blurred = cv2.medianBlur(img, 100)
+        img_all_blurred = cv2.GaussianBlur(img, (301, 301), 0)  # Adjust kernel size as needed
         img_face_blurred = np.where(mask_img > 0, img_all_blurred, img)
-    except:
-        print("Error")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
     return img_face_blurred
+
 
 
 def plot_one_pixelated_head(x, img, pixelated_img):
@@ -190,7 +206,8 @@ def detect(save_img=False):
                         if opt.heads or opt.person:
                             if 'person' in label and opt.person:
                                 # Pixelate the human face
-                                im0 = anonymize_face_pixelate(im0)
+                               ## im0 = plot_one_blurred_head(xyxy,im0) ##for blur
+                               im0 = anonymize_face_pixelate(im0)
                             if 'head' in label and opt.heads:
                                 # Pixelate the head
                                 im0 = plot_one_pixelated_head(xyxy, im0, im0)
