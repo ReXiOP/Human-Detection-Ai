@@ -1,0 +1,4 @@
+services:
+  - type: web
+    name: SM40-Ai
+    dockerfile: Dockerfile
